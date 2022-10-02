@@ -1,10 +1,13 @@
 import React from 'react';
-import { Error, Loader, SongCard } from '../components';
-import { genres } from '../assets/constants';
-import { useGetSongsByGenreQuery } from '../redux/services/shazamCore';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Error, Loader, SongCard } from '../components';
+import { selectGenreListId } from '../redux/features/playerSlice';
+import { useGetSongsByGenreQuery } from '../redux/services/shazamCore';
+import { genres } from '../assets/constants';
+
 const Discover = () => {
+  const dispatch = useDispatch();
   const { genreListId } = useSelector((state) => state.player);
   const { activeSong, isPlaying } = useSelector((state) => state.player);
   const { data, isFetching, error } = useGetSongsByGenreQuery(
@@ -24,9 +27,10 @@ const Discover = () => {
         <h2 className="font-bold text-3xl text-white text-left">
           Discover {genreTitle}
         </h2>
+
         <select
-          onChange={() => {}}
-          value=""
+          onChange={(e) => dispatch(selectGenreListId(e.target.value))}
+          value={genreListId || 'pop'}
           className="bg-black text-gray-300 p-3 text-sm rounded-lg outline-none sm:mt-0 mt-5"
         >
           {genres.map((genre) => (
